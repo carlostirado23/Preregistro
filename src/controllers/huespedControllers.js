@@ -19,7 +19,10 @@ const getHuesped = async () => {
 
 const getHuespedById = async (id = "") => {
     const query = "SELECT * FROM huespedes WHERE id_huesped = $1";
-    const params = [id];
+    return (await executeQuery(query, [id]))[0]; // Simplificar la llamada
+};
+
+const handleHuespedQuery = async (query, params) => {
     const rows = await executeQuery(query, params);
     return rows[0];
 };
@@ -40,18 +43,7 @@ const postCreateHuesped = async (huesped = {}) => {
         INSERT INTO huespedes (numero_identificacion, nombre, apellido, correo, telefono, nacionalidad, direccion, fecha_nacimiento)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;
     `;
-    const params = [
-        pickedHuesped.numero_identificacion,
-        pickedHuesped.nombre,
-        pickedHuesped.apellido,
-        pickedHuesped.correo,
-        pickedHuesped.telefono,
-        pickedHuesped.nacionalidad,
-        pickedHuesped.direccion,
-        pickedHuesped.fecha_nacimiento,
-    ];
-    const rows = await executeQuery(query, params);
-    return rows[0];
+    return await handleHuespedQuery(query, Object.values(pickedHuesped)); // Usar función común
 };
 
 const putUpdateHuesped = async (id = "", huesped = {}) => {
@@ -68,29 +60,15 @@ const putUpdateHuesped = async (id = "", huesped = {}) => {
     const pickedHuesped = pick(huesped, fields);
     const query = `
         UPDATE huespedes
-        SET numero_identificacion = $1, nombre = $2, apellido = $3, correo = $4, telefono = $5, nacionalidad = $6, direccion = $7, fecha_nacimiento = $8
-        WHERE id_huesped = $9 RETURNING *;
+        SET ${fields.map((field, index) => `${field} = $${index + 1}`).join(", ")}
+        WHERE id_huesped = $${fields.length + 1} RETURNING *;
     `;
-    const params = [
-        pickedHuesped.numero_identificacion,
-        pickedHuesped.nombre,
-        pickedHuesped.apellido,
-        pickedHuesped.correo,
-        pickedHuesped.telefono,
-        pickedHuesped.nacionalidad,
-        pickedHuesped.direccion,
-        pickedHuesped.fecha_nacimiento,
-        id,
-    ];
-    const rows = await executeQuery(query, params);
-    return rows[0];
+    return await handleHuespedQuery(query, [...Object.values(pickedHuesped), id]); // Usar función común
 };
 
 const deleteHuesped = async (id = "") => {
     const query = "DELETE FROM huespedes WHERE id_huesped = $1 RETURNING *;";
-    const params = [id];
-    const rows = await executeQuery(query, params);
-    return rows[0];
+    return await handleHuespedQuery(query, [id]); // Usar función común
 };
 
 module.exports = {
