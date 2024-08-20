@@ -18,64 +18,42 @@ const {
     deleteHuesped,
 } = require("../controllers/huespedControllers");
 
-// Ruta para obtener todos los huéspedes
-router.get("/", async (req, res) => {
+const handleResponse = async (res, action) => {
     try {
-        const result = await getHuesped();
-        res.json(jsonResponse(200, { message: "Huéspedes obtenidos:", data: result }));
+        const result = await action();
+        res.json(jsonResponse(200, { message: "Operación exitosa:", data: result }));
     } catch (error) {
-        console.error("Error al obtener los huéspedes:", error);
-        res.json(jsonResponse(500, { error: "Error al obtener los huéspedes" }));
+        console.error("Error en la operación:", error);
+        res.json(jsonResponse(500, { error: "Error en la operación" }));
     }
-});
+};
+
+// Ruta para obtener todos los huéspedes
+router.get("/", (req, res) => handleResponse(res, getHuesped));
 
 // Ruta para obtener un huésped por ID
-router.get("/:id", validatorParamsUserId, validacionDeParametros, async (req, res) => {
+router.get("/:id", validatorParamsUserId, validacionDeParametros, (req, res) => {
     const { id } = req.params;
-    try {
-        const result = await getHuespedById(id);
-        res.json(jsonResponse(200, { message: "Huésped obtenido:", data: result }));
-    } catch (error) {
-        console.error("Error al obtener el huésped:", error);
-        res.json(jsonResponse(500, { error: "Error al obtener el huésped" }));
-    }
+    handleResponse(res, () => getHuespedById(id));
 });
 
 // Ruta para crear un nuevo huésped
-router.post("/", validatorBodyCreateUser, validacionDeParametros, async (req, res) => {
+router.post("/", validatorBodyCreateUser, validacionDeParametros, (req, res) => {
     const huesped = req.body;
-    try {
-        const result = await postCreateHuesped(huesped);
-        res.json(jsonResponse(201, { message: "Huésped creado:", data: result }));
-    } catch (error) {
-        console.error("Error al crear el huésped:", error);
-        res.json(jsonResponse(500, { error: "Error al crear el huésped" }));
-    }
+    handleResponse(res, () => postCreateHuesped(huesped));
 });
 
 // Ruta para actualizar un huésped por ID
-router.put("/:id", validatorParamsUpdateUser, validacionDeParametros, async (req, res) => {
+router.put("/:id", validatorParamsUpdateUser, validacionDeParametros, (req, res) => {
     const { id } = req.params;
     const huesped = req.body;
-    try {
-        const result = await putUpdateHuesped(id, huesped);
-        res.json(jsonResponse(200, { message: "Huésped actualizado:", data: result }));
-    } catch (error) {
-        console.error("Error al actualizar el huésped:", error);
-        res.json(jsonResponse(500, { error: "Error al actualizar el huésped" }));
-    }
+    handleResponse(res, () => putUpdateHuesped(id, huesped));
 });
 
 // Ruta para eliminar un huésped por ID
-router.delete("/:id", validatorParamsDeleteUser, validacionDeParametros, async (req, res) => {
+router.delete("/:id", validatorParamsDeleteUser, validacionDeParametros, (req, res) => {
     const { id } = req.params;
-    try {
-        const result = await deleteHuesped(id);
-        res.json(jsonResponse(200, { message: "Huésped eliminado:", data: result }));
-    } catch (error) {
-        console.error("Error al eliminar el huésped:", error);
-        res.json(jsonResponse(500, { error: "Error al eliminar el huésped" }));
-    }
+    handleResponse(res, () => deleteHuesped(id));
 });
 
 module.exports = router;
