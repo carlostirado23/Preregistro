@@ -18,7 +18,7 @@ const getHuesped = async () => {
 };
 
 const getHuespedById = async (id = "") => {
-    const query = "SELECT * FROM huespedes WHERE id_huesped = $1";
+    const query = "SELECT * FROM huespedes WHERE numero_identificacion = $1";
     return (await executeQuery(query, [id]))[0]; // Simplificar la llamada
 };
 
