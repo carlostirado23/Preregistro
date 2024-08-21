@@ -30,6 +30,7 @@ const handleHuespedQuery = async (query, params) => {
 const postCreateHuesped = async (huesped = {}) => {
     const fields = [
         "numero_identificacion",
+        "tipo_documento",
         "nombre",
         "apellido",
         "correo",
@@ -40,8 +41,8 @@ const postCreateHuesped = async (huesped = {}) => {
     ];
     const pickedHuesped = pick(huesped, fields);
     const query = `
-        INSERT INTO huespedes (numero_identificacion, nombre, apellido, correo, telefono, nacionalidad, direccion, fecha_nacimiento)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;
+        INSERT INTO huespedes (numero_identificacion, tipo_documento, nombre, apellido, correo, telefono, nacionalidad, direccion, fecha_nacimiento)
+        VALUES ($1, 2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *;
     `;
     return await handleHuespedQuery(query, Object.values(pickedHuesped)); // Usar función común
 };
@@ -49,6 +50,7 @@ const postCreateHuesped = async (huesped = {}) => {
 const putUpdateHuesped = async (id = "", huesped = {}) => {
     const fields = [
         "numero_identificacion",
+        "tipo_documento",
         "nombre",
         "apellido",
         "correo",
