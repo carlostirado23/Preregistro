@@ -9,6 +9,7 @@ const {
     validatorParamsDeleteUser,
 } = require("../../schemas/usersSchema");
 const validacionDeParametros = require("../../middlewares/validationsMiddleware");
+const validateApiKey = require("../../middlewares/validateApiKey"); // Importa el middleware
 
 const {
     getHuesped,
@@ -27,6 +28,9 @@ const handleResponse = async (res, action) => {
         res.json(jsonResponse(500, { error: "Error en la operación" }));
     }
 };
+
+// Aplica el middleware de validación de API key a todas las rutas
+router.use(validateApiKey);
 
 // Ruta para obtener todos los huéspedes
 router.get("/", (req, res) => handleResponse(res, getHuesped));
