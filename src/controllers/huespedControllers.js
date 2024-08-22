@@ -51,10 +51,11 @@ const postCreateHuesped = async (huesped = {}) => {
     const pickedHuesped = pick(huesped, fields);
     const query = `
         INSERT INTO huespedes (numero_identificacion, tipo_documento, nombre, apellido, correo, telefono, origen, direccion, fecha_nacimiento)
-        VALUES ($1, 2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *;
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;
     `;
     return await handleHuespedQuery(query, Object.values(pickedHuesped)); // Usar función común
 };
+
 
 const putUpdateHuesped = async (id = "", huesped = {}) => {
     const fields = [

@@ -20,8 +20,8 @@ const validatorBodyCreateUser = [
     body("tipo_documento")
         .exists()
         .withMessage("El tipo de documento es obligatorio")
-        .isNumeric()
-        .withMessage("El tipo de documento debe ser numérico"),
+        .isString()
+        .withMessage("El tipo de documento debe ser string"),
     body("nombre")
         .exists()
         .withMessage("El nombre es obligatorio")
@@ -42,11 +42,11 @@ const validatorBodyCreateUser = [
         .withMessage("El teléfono es obligatorio")
         .isNumeric()
         .withMessage("El teléfono debe ser numérico"),
-    body("nacionalidad")
+    body("origen")
         .exists()
-        .withMessage("La nacionalidad es obligatoria")
+        .withMessage("El origen es obligatoria")
         .isString()
-        .withMessage("La nacionalidad debe ser una cadena de texto"),
+        .withMessage("El origen debe ser una cadena de texto"),
     body("direccion")
         .exists()
         .withMessage("La dirección es obligatoria")
