@@ -12,13 +12,13 @@ const executeQuery = async (query, params = []) => {
 };
 
 const getHuesped = async () => {
-    const query = "SELECT * FROM huespedes";
+    const query = "SELECT * FROM pre_register";
     console.log("Ejecutando consulta:", query);
     return await executeQuery(query);
 };
 
 const getHuespedById = async (id = "") => {
-    const query = "SELECT * FROM huespedes WHERE numero_identificacion = $1";
+    const query = "SELECT * FROM pre_register WHERE identification_number = $1";
     try {
         const result = await executeQuery(query, [id]);
         if (result.length === 0) {
@@ -38,19 +38,19 @@ const handleHuespedQuery = async (query, params) => {
 
 const postCreateHuesped = async (huesped = {}) => {
     const fields = [
-        "numero_identificacion",
-        "tipo_documento",
-        "nombre",
-        "apellido",
-        "correo",
-        "telefono",
-        "origen",
-        "direccion",
-        "fecha_nacimiento",
+        "identification_number",
+        "document_type",
+        "name",
+        "last_name",
+        "email",
+        "phone",
+        "origin",
+        "address",
+        "date_of_birth",
     ];
     const pickedHuesped = pick(huesped, fields);
     const query = `
-        INSERT INTO huespedes (numero_identificacion, tipo_documento, nombre, apellido, correo, telefono, origen, direccion, fecha_nacimiento)
+        INSERT INTO pre_register (identification_number, document_type, name, last_name, email, phone, origin, address, date_of_birth)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;
     `;
     return await handleHuespedQuery(query, Object.values(pickedHuesped)); // Usar función común
@@ -59,19 +59,19 @@ const postCreateHuesped = async (huesped = {}) => {
 
 const putUpdateHuesped = async (id = "", huesped = {}) => {
     const fields = [
-        "numero_identificacion",
-        "tipo_documento",
-        "nombre",
-        "apellido",
-        "correo",
-        "telefono",
-        "origen",
-        "direccion",
-        "fecha_nacimiento",
+        "identification_number",
+        "document_type",
+        "name",
+        "last_name",
+        "email",
+        "phone",
+        "origin",
+        "address",
+        "date_of_birth",
     ];
     const pickedHuesped = pick(huesped, fields);
     const query = `
-        UPDATE huespedes
+        UPDATE pre_register
         SET ${fields.map((field, index) => `${field} = $${index + 1}`).join(", ")}
         WHERE id_huesped = $${fields.length + 1} RETURNING *;
     `;
@@ -79,7 +79,7 @@ const putUpdateHuesped = async (id = "", huesped = {}) => {
 };
 
 const deleteHuesped = async (id = "") => {
-    const query = "DELETE FROM huespedes WHERE id_huesped = $1 RETURNING *;";
+    const query = "DELETE FROM pre_register WHERE id_huesped = $1 RETURNING *;";
     return await handleHuespedQuery(query, [id]); // Usar función común
 };
 

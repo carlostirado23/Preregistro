@@ -12,47 +12,47 @@ const validatorParamsUserId = [
 
 // Validación de cuerpo para crear un usuario
 const validatorBodyCreateUser = [
-    body("numero_identificacion")
+    body("identification_number")
         .exists()
         .withMessage("El número de identificación es obligatorio")
         .isNumeric()
         .withMessage("El número de identificación debe ser numérico"),
-    body("tipo_documento")
+    body("document_type")
         .exists()
         .withMessage("El tipo de documento es obligatorio")
         .isString()
         .withMessage("El tipo de documento debe ser string"),
-    body("nombre")
+    body("name")
         .exists()
         .withMessage("El nombre es obligatorio")
         .isString()
         .withMessage("El nombre debe ser una cadena de texto"),
-    body("apellido")
+    body("last_name")
         .exists()
         .withMessage("El apellido es obligatorio")
         .isString()
         .withMessage("El apellido debe ser una cadena de texto"),
-    body("correo")
+    body("email")
         .exists()
         .withMessage("El correo es obligatorio")
         .isEmail()
         .withMessage("El correo debe ser un correo válido"),
-    body("telefono")
+    body("phone")
         .exists()
         .withMessage("El teléfono es obligatorio")
         .isNumeric()
         .withMessage("El teléfono debe ser numérico"),
-    body("origen")
+    body("origin")
         .exists()
         .withMessage("El origen es obligatoria")
         .isString()
         .withMessage("El origen debe ser una cadena de texto"),
-    body("direccion")
+    body("address")
         .exists()
         .withMessage("La dirección es obligatoria")
         .isString()
         .withMessage("La dirección debe ser una cadena de texto"),
-    body("fecha_nacimiento")
+    body("date_of_birth")
         .exists()
         .withMessage("La fecha de nacimiento es obligatoria")
         .isDate()
