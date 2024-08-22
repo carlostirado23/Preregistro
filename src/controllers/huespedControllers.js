@@ -19,7 +19,16 @@ const getHuesped = async () => {
 
 const getHuespedById = async (id = "") => {
     const query = "SELECT * FROM pre_register WHERE identification_number = $1";
-    return (await executeQuery(query, [id]))[0]; // Simplificar la llamada
+    try {
+        const result = await executeQuery(query, [id]);
+        if (result.length === 0) {
+            throw new Error(`No se encontró un huésped con el número de identificación: ${id}`);
+        }
+        return result[0]; // Retorna el primer resultado
+    } catch (error) {
+        console.error("Error al obtener el huésped:", error.message);
+        throw error; // Re-lanzar el error para manejarlo en otro lugar si es necesario
+    }
 };
 
 const handleHuespedQuery = async (query, params) => {
@@ -42,10 +51,11 @@ const postCreateHuesped = async (huesped = {}) => {
     const pickedHuesped = pick(huesped, fields);
     const query = `
         INSERT INTO pre_register (identification_number, document_type, name, last_name, email, phone, origin, address, date_of_birth)
-        VALUES ($1, 2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *;
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;
     `;
     return await handleHuespedQuery(query, Object.values(pickedHuesped)); // Usar función común
 };
+
 
 const putUpdateHuesped = async (id = "", huesped = {}) => {
     const fields = [
