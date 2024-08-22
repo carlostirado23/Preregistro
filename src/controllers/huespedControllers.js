@@ -19,7 +19,16 @@ const getHuesped = async () => {
 
 const getHuespedById = async (id = "") => {
     const query = "SELECT * FROM huespedes WHERE numero_identificacion = $1";
-    return (await executeQuery(query, [id]))[0]; // Simplificar la llamada
+    try {
+        const result = await executeQuery(query, [id]);
+        if (result.length === 0) {
+            throw new Error(`No se encontró un huésped con el número de identificación: ${id}`);
+        }
+        return result[0]; // Retorna el primer resultado
+    } catch (error) {
+        console.error("Error al obtener el huésped:", error.message);
+        throw error; // Re-lanzar el error para manejarlo en otro lugar si es necesario
+    }
 };
 
 const handleHuespedQuery = async (query, params) => {
