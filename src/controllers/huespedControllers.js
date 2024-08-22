@@ -45,13 +45,14 @@ const postCreateHuesped = async (huesped = {}) => {
         "email",
         "phone",
         "origin",
-        "address",
+        "transport_origin",
         "date_of_birth",
+        "reason_trip",
     ];
     const pickedHuesped = pick(huesped, fields);
     const query = `
-        INSERT INTO pre_register (identification_number, document_type, name, last_name, email, phone, origin, address, date_of_birth)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;
+        INSERT INTO pre_register (identification_number, document_type, name, last_name, email, phone, origin, transport_origin, date_of_birth, reason_trip)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *;
     `;
     return await handleHuespedQuery(query, Object.values(pickedHuesped)); // Usar función común
 };
@@ -66,9 +67,15 @@ const putUpdateHuesped = async (id = "", huesped = {}) => {
         "email",
         "phone",
         "origin",
-        "address",
+        "transport_origin",
         "date_of_birth",
+        "reason_trip",
+        "status", 
     ];
+
+    // Incluye el status como true en el objeto huesped antes de actualizar
+    huesped.status = true;
+
     const pickedHuesped = pick(huesped, fields);
     const query = `
         UPDATE pre_register
