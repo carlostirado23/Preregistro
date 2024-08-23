@@ -90,9 +90,15 @@ const putUpdateHuesped = async (id = "", huesped = {}) => {
         "email",
         "phone",
         "origin",
-        "address",
+        "transport_origin",
         "date_of_birth",
+        "reason_trip",
+        "status", 
     ];
+
+    // Incluye el status como true en el objeto huesped antes de actualizar
+    huesped.status = true;
+
     const pickedHuesped = pick(huesped, fields);
     const query = `
         UPDATE pre_register
