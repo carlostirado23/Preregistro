@@ -1,27 +1,21 @@
-// middlewares/validateApiKey.js
+const pool = require("../config/database");
 
-const Pool = require("../config/database");
-
-const validateApiKey = async (req, res, next) => {
-    const apiKey = req.headers["key"];
-
-    if (!apiKey) {
-        return res.status(401).json({ error: "API key is missing" });
-    }
-
+async function validateApiKey(req, res, next) {
     try {
-        const query = `SELECT * FROM api_keys WHERE api_key = $1`;
-        const result = await Pool.query(query, [apiKey]);
+        const { rows } = await pool.query("SELECT key FROM api_keys WHERE id = $1", [1]); // Suponiendo que tienes una fila con id = 1
+        const apiKey = rows[0]?.key;
 
-        if (result.rows.length === 0) {
-            return res.status(403).json({ error: "Invalid API key" });
+        if (!apiKey) {
+            return res.status(500).json({ error: "API key not found" });
         }
 
-        next(); // La clave es válida, continúa con la siguiente función en la cadena
+        // Aquí podrías hacer cualquier lógica adicional para verificar el uso correcto de la API key
+
+        next();
     } catch (error) {
-        console.error("Error al validar la clave de API:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        console.error("Error validating API key:", error);
+        return res.status(500).json({ error: "Internal server error" });
     }
-};
+}
 
 module.exports = validateApiKey;

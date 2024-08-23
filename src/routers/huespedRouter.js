@@ -30,38 +30,37 @@ const handleResponse = async (res, action) => {
     }
 };
 
-// Aplica el middleware de validación de API key a todas las rutas
-router.use(validateApiKey);
+
 
 // Ruta para obtener todos los huéspedes
-router.get("/", (req, res) => handleResponse(res, getHuesped));
+router.get("/key/", (req, res) => handleResponse(res, getHuesped));
 
 // Ruta para obtener un huésped por ID
-router.get("/:id", validatorParamsUserId, validacionDeParametros, (req, res) => {
+router.get("/key/:id", validatorParamsUserId, validacionDeParametros, (req, res) => {
     const { id } = req.params;
     handleResponse(res, () => getHuespedById(id));
 });
 
-router.get("/uuid/:uuid", (req, res) => {
+router.get("/key/uuid/:uuid", (req, res) => {
     const { uuid } = req.params;
     handleResponse(res, () => getHuespedByUuid(uuid));
 });
 
 // Ruta para crear un nuevo huésped
-router.post("/", validatorBodyCreateUser, validacionDeParametros, (req, res) => {
+router.post("/key/", validatorBodyCreateUser, validacionDeParametros, (req, res) => {
     const huesped = req.body;
     handleResponse(res, () => postCreateHuesped(huesped));
 });
 
 // Ruta para actualizar un huésped por ID
-router.put("/:id", validatorParamsUpdateUser, validacionDeParametros, (req, res) => {
+router.put("/key/:id", validatorParamsUpdateUser, validacionDeParametros, (req, res) => {
     const { id } = req.params;
     const huesped = req.body;
     handleResponse(res, () => putUpdateHuesped(id, huesped));
 });
 
 // Ruta para eliminar un huésped por ID
-router.delete("/:id", validatorParamsDeleteUser, validacionDeParametros, (req, res) => {
+router.delete("/key/:id", validatorParamsDeleteUser, validacionDeParametros, (req, res) => {
     const { id } = req.params;
     handleResponse(res, () => deleteHuesped(id));
 });
