@@ -14,6 +14,7 @@ const validateApiKey = require("../../middlewares/validateApiKey"); // Importa e
 const {
     getHuesped,
     getHuespedById,
+    getHuespedByUuid,
     postCreateHuesped,
     putUpdateHuesped,
     deleteHuesped,
@@ -39,6 +40,11 @@ router.get("/", (req, res) => handleResponse(res, getHuesped));
 router.get("/:id", validatorParamsUserId, validacionDeParametros, (req, res) => {
     const { id } = req.params;
     handleResponse(res, () => getHuespedById(id));
+});
+
+router.get("/uuid/:uuid", (req, res) => {
+    const { uuid } = req.params;
+    handleResponse(res, () => getHuespedByUuid(uuid));
 });
 
 // Ruta para crear un nuevo huésped

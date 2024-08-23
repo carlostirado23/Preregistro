@@ -3,11 +3,7 @@ const _ = require("lodash");
 
 // Validación de parámetro para el ID de usuario
 const validatorParamsUserId = [
-  param("id")
-    .exists()
-    .withMessage("El ID es obligatorio")
-    .isNumeric()
-    .withMessage("El ID debe ser numérico"),
+    param("id").exists().withMessage("El ID es obligatorio").isString().withMessage("El ID debe ser una cadena"),
 ];
 
 // Validación de cuerpo para crear un usuario
@@ -47,11 +43,16 @@ const validatorBodyCreateUser = [
         .withMessage("El origen es obligatoria")
         .isString()
         .withMessage("El origen debe ser una cadena de texto"),
-    body("address")
+    body("transport_origin")
         .exists()
-        .withMessage("La dirección es obligatoria")
+        .withMessage("El transporte de origen es obligatoria")
         .isString()
-        .withMessage("La dirección debe ser una cadena de texto"),
+        .withMessage("El transporte de origen debe ser una cadena de texto"),
+    body("reason_trip")
+        .exists()
+        .withMessage("El motivo de viaje es obligatoria")
+        .isString()
+        .withMessage("El motivo de viaje debe ser una cadena de texto"),
     body("date_of_birth")
         .exists()
         .withMessage("La fecha de nacimiento es obligatoria")
@@ -61,33 +62,24 @@ const validatorBodyCreateUser = [
 
 // Validación de parámetro para actualizar un usuario
 const validatorParamsUpdateUser = [
-  param("id")
-    .notEmpty()
-    .withMessage("El ID no puede estar vacío")
-    .isNumeric()
-    .withMessage("El ID tiene que ser numérico"),
+    param("id")
+        .notEmpty()
+        .withMessage("El ID no puede estar vacío")
+        .isNumeric()
+        .withMessage("El ID tiene que ser numérico"),
 ];
 
 // Validación de parámetro para eliminar un usuario
 const validatorParamsDeleteUser = [
-  param("id")
-    .exists()
-    .withMessage("El ID es obligatorio")
-    .isNumeric()
-    .withMessage("El ID debe ser numérico"),
+    param("id").exists().withMessage("El ID es obligatorio").isNumeric().withMessage("El ID debe ser numérico"),
 ];
 
 module.exports = _.pick(
-  {
-    validatorBodyCreateUser,
-    validatorParamsUserId,
-    validatorParamsDeleteUser,
-    validatorParamsUpdateUser,
-  },
-  [
-    "validatorBodyCreateUser",
-    "validatorParamsUserId",
-    "validatorParamsDeleteUser",
-    "validatorParamsUpdateUser",
-  ]
+    {
+        validatorBodyCreateUser,
+        validatorParamsUserId,
+        validatorParamsDeleteUser,
+        validatorParamsUpdateUser,
+    },
+    ["validatorBodyCreateUser", "validatorParamsUserId", "validatorParamsDeleteUser", "validatorParamsUpdateUser"]
 );

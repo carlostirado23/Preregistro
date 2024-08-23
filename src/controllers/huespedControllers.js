@@ -1,4 +1,5 @@
 const { pick } = require("lodash");
+const { v4: uuidv4 } = require("uuid"); 
 const Pool = require("../../config/database");
 
 const executeQuery = async (query, params = []) => {
@@ -31,6 +32,20 @@ const getHuespedById = async (id = "") => {
     }
 };
 
+const getHuespedByUuid = async (uuid = "") => {
+    const query = "SELECT * FROM pre_register WHERE uuid = $1";
+    try {
+        const result = await executeQuery(query, [uuid]);
+        if (result.length === 0) {
+            throw new Error(`No se encontró un huésped con el uuid: ${uuid}`);
+        }
+        return result[0]; // Retorna el primer resultado
+    } catch (error) {
+        console.error("Error al obtener el huésped:", error.message);
+        throw error; // Re-lanzar el error para manejarlo en otro lugar si es necesario
+    }
+};
+
 const handleHuespedQuery = async (query, params) => {
     const rows = await executeQuery(query, params);
     return rows[0];
@@ -38,6 +53,7 @@ const handleHuespedQuery = async (query, params) => {
 
 const postCreateHuesped = async (huesped = {}) => {
     const fields = [
+        "uuid",
         "identification_number",
         "document_type",
         "name",
@@ -45,13 +61,21 @@ const postCreateHuesped = async (huesped = {}) => {
         "email",
         "phone",
         "origin",
-        "address",
+        "transport_origin",
         "date_of_birth",
+        "reason_trip",
     ];
+
+    // Generar un UUID
+    const newUuid = uuidv4();
+
+    // Agregar el UUID al objeto huésped
+    huesped.uuid = newUuid;
+
     const pickedHuesped = pick(huesped, fields);
     const query = `
-        INSERT INTO pre_register (identification_number, document_type, name, last_name, email, phone, origin, address, date_of_birth)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;
+        INSERT INTO pre_register (uuid, identification_number, document_type, name, last_name, email, phone, origin, transport_origin, date_of_birth, reason_trip)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *;
     `;
     return await handleHuespedQuery(query, Object.values(pickedHuesped)); // Usar función común
 };
@@ -73,19 +97,20 @@ const putUpdateHuesped = async (id = "", huesped = {}) => {
     const query = `
         UPDATE pre_register
         SET ${fields.map((field, index) => `${field} = $${index + 1}`).join(", ")}
-        WHERE id_huesped = $${fields.length + 1} RETURNING *;
+        WHERE uuid = $${fields.length + 1} RETURNING *;
     `;
     return await handleHuespedQuery(query, [...Object.values(pickedHuesped), id]); // Usar función común
 };
 
 const deleteHuesped = async (id = "") => {
-    const query = "DELETE FROM pre_register WHERE id_huesped = $1 RETURNING *;";
+    const query = "DELETE FROM pre_register WHERE uuid = $1 RETURNING *;";
     return await handleHuespedQuery(query, [id]); // Usar función común
 };
 
 module.exports = {
     getHuesped,
     getHuespedById,
+    getHuespedByUuid,
     postCreateHuesped,
     putUpdateHuesped,
     deleteHuesped,
