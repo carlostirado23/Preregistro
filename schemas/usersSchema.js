@@ -9,6 +9,16 @@ const validatorParamsUserId = [
         .isUUID(4)
         .withMessage("El UUID debe ser un UUID válido"),
 ];
+
+// Validación de parámetro para `identification_number`
+const validatorParamsIdentificationNumber = [
+    param("identification_number")
+        .exists()
+        .withMessage("El número de identificación es obligatorio")
+        .isNumeric()
+        .withMessage("El número de identificación debe ser numérico"),
+];
+
 // Validación de cuerpo para crear un usuario
 const validatorBodyCreateUser = [
     body("identification_number")
@@ -85,9 +95,16 @@ const validatorParamsDeleteUser = [
 module.exports = _.pick(
     {
         validatorBodyCreateUser,
+        validatorParamsIdentificationNumber,
         validatorParamsUserId,
         validatorParamsDeleteUser,
         validatorParamsUpdateUser,
     },
-    ["validatorBodyCreateUser", "validatorParamsUserId", "validatorParamsDeleteUser", "validatorParamsUpdateUser"]
+    [
+        "validatorBodyCreateUser",
+        "validatorParamsIdentificationNumber",
+        "validatorParamsUserId",
+        "validatorParamsDeleteUser",
+        "validatorParamsUpdateUser",
+    ]
 );
