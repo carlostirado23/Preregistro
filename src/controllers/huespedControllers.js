@@ -81,7 +81,7 @@ const postCreateHuesped = async (huesped = {}) => {
 };
 
 
-const putUpdateHuesped = async (id = "", huesped = {}) => {
+const putUpdateHuesped = async (uuid = "", huesped = {}) => {
     const fields = [
         "identification_number",
         "document_type",
@@ -93,11 +93,7 @@ const putUpdateHuesped = async (id = "", huesped = {}) => {
         "transport_origin",
         "date_of_birth",
         "reason_trip",
-        "status", 
     ];
-
-    // Incluye el status como true en el objeto huesped antes de actualizar
-    huesped.status = true;
 
     const pickedHuesped = pick(huesped, fields);
     const query = `
@@ -105,13 +101,15 @@ const putUpdateHuesped = async (id = "", huesped = {}) => {
         SET ${fields.map((field, index) => `${field} = $${index + 1}`).join(", ")}
         WHERE uuid = $${fields.length + 1} RETURNING *;
     `;
-    return await handleHuespedQuery(query, [...Object.values(pickedHuesped), id]); // Usar función común
+    return await handleHuespedQuery(query, [...Object.values(pickedHuesped), uuid]); // Usar función común
 };
 
-const deleteHuesped = async (id = "") => {
+
+const deleteHuesped = async (uuid = "") => {
     const query = "DELETE FROM pre_register WHERE uuid = $1 RETURNING *;";
-    return await handleHuespedQuery(query, [id]); // Usar función común
+    return await handleHuespedQuery(query, [uuid]); // Usar función común
 };
+
 
 module.exports = {
     getHuesped,
