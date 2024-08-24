@@ -61,9 +61,14 @@ const postCreateHuesped = async (huesped = {}) => {
         "email",
         "phone",
         "origin",
+        "state",
+        "city",
+        "address",
         "transport_origin",
         "date_of_birth",
         "reason_trip",
+        "is_first_time",
+        "photo_base64",
     ];
 
     // Generar un UUID
@@ -72,10 +77,16 @@ const postCreateHuesped = async (huesped = {}) => {
     // Agregar el UUID al objeto huésped
     huesped.uuid = newUuid;
 
+    // Convertir la imagen de base64 a binario (Buffer)
+    if (huesped.photo_base64) {
+        const base64Data = huesped.photo_base64.split(",")[1]; // Remover el prefijo
+        huesped.photo = Buffer.from(base64Data, "base64");
+    }
+
     const pickedHuesped = pick(huesped, fields);
     const query = `
-        INSERT INTO pre_register (uuid, identification_number, document_type, name, last_name, email, phone, origin, transport_origin, date_of_birth, reason_trip)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *;
+        INSERT INTO pre_register (uuid, identification_number, document_type, name, last_name, email, phone, origin, state, city, address, transport_origin, date_of_birth, reason_trip, is_first_time, photo_base64)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING *;
     `;
     return await handleHuespedQuery(query, Object.values(pickedHuesped)); // Usar función común
 };
@@ -90,9 +101,13 @@ const putUpdateHuesped = async (uuid = "", huesped = {}) => {
         "email",
         "phone",
         "origin",
+        "state",
+        "city",
+        "address",
         "transport_origin",
         "date_of_birth",
         "reason_trip",
+        "is_first_time",
     ];
 
     const pickedHuesped = pick(huesped, fields);
