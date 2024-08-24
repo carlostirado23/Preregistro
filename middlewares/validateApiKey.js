@@ -2,8 +2,8 @@ const pool = require("../config/database");
 
 async function validateApiKey(req, res, next) {
     try {
-        const { rows } = await pool.query("SELECT key FROM api_keys WHERE id = $1", [1]); // Suponiendo que tienes una fila con id = 1
-        const apiKey = rows[0]?.key;
+        const { rows } = await pool.query("SELECT api_key FROM api_keys WHERE id = $1", [1]); // Suponiendo que tienes una fila con id = 1
+        const apiKey = rows[0]?.api_key;
 
         if (!apiKey) {
             return res.status(500).json({ error: "API key not found" });
