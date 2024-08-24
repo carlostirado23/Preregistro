@@ -56,6 +56,21 @@ const validatorBodyCreateUser = [
         .withMessage("El origen es obligatoria")
         .isString()
         .withMessage("El origen debe ser una cadena de texto"),
+    body("state")
+        .exists()
+        .withMessage("El estado es obligatoria")
+        .isString()
+        .withMessage("El estado debe ser una cadena de texto"),
+    body("city")
+        .exists()
+        .withMessage("La ciudad es obligatoria")
+        .isString()
+        .withMessage("La ciudad debe ser una cadena de texto"),
+    body("address")
+        .exists()
+        .withMessage("La direccion es obligatoria")
+        .isString()
+        .withMessage("La direccion debe ser una cadena de texto"),
     body("transport_origin")
         .exists()
         .withMessage("El transporte de origen es obligatoria")
@@ -76,6 +91,11 @@ const validatorBodyCreateUser = [
         .withMessage("El motivo del viaje es obligatoria")
         .isString()
         .withMessage("El motivo del viaje debe ser una cadena de texto"),
+    body("is_first_time")
+        .exists()
+        .withMessage("Es la primera vez del viaje es obligatoria")
+        .isBoolean()
+        .withMessage("Es la primera vez del viaje debe ser un boolean"),
 ];
 
 // Validación de parámetro para actualizar un usuario
