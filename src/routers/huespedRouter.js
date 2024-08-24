@@ -36,7 +36,7 @@ const handleResponse = async (res, action) => {
 router.get("/key", validateApiKey, (req, res) => handleResponse(res, getHuesped));
 
 // Ruta para obtener un huésped por UUID
-router.get("/key/:id", validateApiKey, validatorParamsIdentificationNumber, (req, res) => {
+router.get("/key/id/:id", validateApiKey, validatorParamsIdentificationNumber, (req, res) => {
     const { id } = req.params;
     handleResponse(res, () => getHuespedById(id));
 });

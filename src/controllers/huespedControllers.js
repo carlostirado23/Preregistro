@@ -19,6 +19,7 @@ const getHuesped = async () => {
 };
 
 const getHuespedById = async (id = "") => {
+    console.log("ID recibido:", id); 
     const query = "SELECT * FROM pre_register WHERE identification_number = $1";
     try {
         const result = await executeQuery(query, [id]);
