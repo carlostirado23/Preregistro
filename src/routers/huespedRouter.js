@@ -33,7 +33,7 @@ const handleResponse = async (res, action) => {
 
 
 // Ruta para obtener todos los huéspedes
-router.get("/key/", (req, res) => handleResponse(res, getHuesped));
+router.get("/key", (req, res) => handleResponse(res, getHuesped));
 
 // Ruta para obtener un huésped por ID
 router.get("/key/:id", validatorParamsUserId, validacionDeParametros, (req, res) => {
@@ -53,16 +53,16 @@ router.post("/key/", validatorBodyCreateUser, validacionDeParametros, (req, res)
 });
 
 // Ruta para actualizar un huésped por ID
-router.put("/key/:id", validatorParamsUpdateUser, validacionDeParametros, (req, res) => {
-    const { id } = req.params;
+router.put("/key/:uuid", validatorParamsUpdateUser, validacionDeParametros, (req, res) => {
+    const { uuid } = req.params;
     const huesped = req.body;
-    handleResponse(res, () => putUpdateHuesped(id, huesped));
+    handleResponse(res, () => putUpdateHuesped(uuid, huesped));
 });
 
 // Ruta para eliminar un huésped por ID
-router.delete("/key/:id", validatorParamsDeleteUser, validacionDeParametros, (req, res) => {
-    const { id } = req.params;
-    handleResponse(res, () => deleteHuesped(id));
+router.delete("/key/:uuid", validatorParamsDeleteUser, validacionDeParametros, (req, res) => {
+    const { uuid } = req.params;
+    handleResponse(res, () => deleteHuesped(uuid));
 });
 
 module.exports = router;
