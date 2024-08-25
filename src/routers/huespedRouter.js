@@ -27,7 +27,7 @@ const handleResponse = async (res, action) => {
         res.json(jsonResponse(200, { message: "Operación exitosa:", data: result }));
     } catch (error) {
         console.error("Error en la operación:", error);
-        res.json(jsonResponse(500, { error: "Error en la operación" }));
+        res.json(jsonResponse(500, { error }));
     }
 };
 
