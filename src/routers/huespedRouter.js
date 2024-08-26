@@ -25,26 +25,35 @@ const handleResponse = async (res, action) => {
     try {
         const result = await action();
 
-        // Suponiendo que el `UUID` está en el objeto `result`
+        if (result === null) {
+            return res
+                .status(200)
+                .json(
+                    jsonResponse(200, {
+                        message: "No se encontró ningún usuario registrado con ese número de identificación.",
+                        data: null,
+                    })
+                );
+        }
+
         const uuid = result.uuid;
 
         res.json(jsonResponse(200, { message: "Operación exitosa", data: result, uuid }));
     } catch (error) {
         console.error("Error en la operación:", error);
 
-        // Crear un objeto de error detallado
         const errorMessage = error.message || "Ocurrió un error desconocido.";
         const errorDetails = {
             message: errorMessage,
             stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
-            code: error.code || "INTERNAL_SERVER_ERROR", // Puedes agregar códigos de error específicos
-            details: error.details || null, // Detalles adicionales que puedas haber agregado al error
+            code: error.code || "INTERNAL_SERVER_ERROR",
+            details: error.details || null,
         };
 
-        // Retornar un error con un código de estado 500 y el objeto de error detallado
         res.status(500).json(jsonResponse(500, { error: errorDetails }));
     }
 };
+
 
 
 
@@ -71,14 +80,14 @@ router.post("/key/", validateApiKey, validatorBodyCreateUser, validacionDeParame
 
 
 // Ruta para actualizar un huésped por ID
-router.put("/key/:uuid", validateApiKey, validatorParamsUpdateUser, validacionDeParametros, (req, res) => {
+router.put("/key/edit/:uuid", validateApiKey, validatorParamsUpdateUser, validacionDeParametros, (req, res) => {
     const { uuid } = req.params;
     const huesped = req.body;
     handleResponse(res, () => putUpdateHuesped(uuid, huesped));
 });
 
 // Ruta para eliminar un huésped por ID
-router.delete("/key/:uuid", validateApiKey, validatorParamsDeleteUser, validacionDeParametros, (req, res) => {
+router.delete("/key/delete/:uuid", validateApiKey, validatorParamsDeleteUser, validacionDeParametros, (req, res) => {
     const { uuid } = req.params;
     handleResponse(res, () => deleteHuesped(uuid));
 });
