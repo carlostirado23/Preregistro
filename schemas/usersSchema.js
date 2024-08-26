@@ -81,6 +81,11 @@ const validatorBodyCreateUser = [
         .withMessage("El motivo de viaje es obligatoria")
         .isString()
         .withMessage("El motivo de viaje debe ser una cadena de texto"),
+    body("status")
+        .exists()
+        .withMessage("El estado es obligatoria")
+        .isBoolean()
+        .withMessage("El estado debe ser un boolean"),
     body("date_of_birth")
         .exists()
         .withMessage("La fecha de nacimiento es obligatoria")
