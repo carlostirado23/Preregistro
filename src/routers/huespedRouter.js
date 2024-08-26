@@ -24,12 +24,28 @@ const {
 const handleResponse = async (res, action) => {
     try {
         const result = await action();
-        res.json(jsonResponse(200, { message: "Operación exitosa:", data: result }));
+
+        // Suponiendo que el `UUID` está en el objeto `result`
+        const uuid = result.uuid;
+
+        res.json(jsonResponse(200, { message: "Operación exitosa", data: result, uuid }));
     } catch (error) {
         console.error("Error en la operación:", error);
-        res.json(jsonResponse(500, { error }));
+
+        // Crear un objeto de error detallado
+        const errorMessage = error.message || "Ocurrió un error desconocido.";
+        const errorDetails = {
+            message: errorMessage,
+            stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
+            code: error.code || "INTERNAL_SERVER_ERROR", // Puedes agregar códigos de error específicos
+            details: error.details || null, // Detalles adicionales que puedas haber agregado al error
+        };
+
+        // Retornar un error con un código de estado 500 y el objeto de error detallado
+        res.status(500).json(jsonResponse(500, { error: errorDetails }));
     }
 };
+
 
 
 // Ruta para obtener todos los huéspedes
@@ -52,6 +68,7 @@ router.post("/key/", validateApiKey, validatorBodyCreateUser, validacionDeParame
     const huesped = req.body;
     handleResponse(res, () => postCreateHuesped(huesped));
 });
+
 
 // Ruta para actualizar un huésped por ID
 router.put("/key/:uuid", validateApiKey, validatorParamsUpdateUser, validacionDeParametros, (req, res) => {

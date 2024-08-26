@@ -89,8 +89,14 @@ const postCreateHuesped = async (huesped = {}) => {
         INSERT INTO pre_register (uuid, identification_number, document_type, name, last_name, email, phone, origin, state, city, address, transport_origin, date_of_birth, reason_trip, is_first_time, photo_base64)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING *;
     `;
-    return await handleHuespedQuery(query, Object.values(pickedHuesped)); // Usar función común
+
+    // Ejecutar la consulta y retornar el resultado
+    const result = await handleHuespedQuery(query, Object.values(pickedHuesped)); // Usar función común
+
+    // Retornar el `UUID` junto con el resultado de la operación
+    return { ...result, uuid: newUuid };
 };
+
 
 
 const putUpdateHuesped = async (uuid = "", huesped = {}) => {
