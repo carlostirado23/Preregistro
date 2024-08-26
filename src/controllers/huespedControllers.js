@@ -19,12 +19,12 @@ const getHuesped = async () => {
 };
 
 const getHuespedById = async (id = "") => {
-    console.log("ID recibido:", id); 
+    console.log("ID recibido:", id);
     const query = "SELECT * FROM pre_register WHERE identification_number = $1";
     try {
         const result = await executeQuery(query, [id]);
         if (result.length === 0) {
-            throw new Error(`No se encontró un huésped con el número de identificación: ${id}`);
+            return null; // Retorna `null` si no se encuentra el huésped
         }
         return result[0]; // Retorna el primer resultado
     } catch (error) {
@@ -32,6 +32,7 @@ const getHuespedById = async (id = "") => {
         throw error; // Re-lanzar el error para manejarlo en otro lugar si es necesario
     }
 };
+
 
 const getHuespedByUuid = async (uuid = "") => {
     const query = "SELECT * FROM pre_register WHERE uuid = $1";
