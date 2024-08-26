@@ -68,8 +68,9 @@ const postCreateHuesped = async (huesped = {}) => {
         "transport_origin",
         "date_of_birth",
         "reason_trip",
+        "status",
         "is_first_time",
-        "photo_base64",
+        "photo_base64", // Asegúrate de que este campo coincida con tu esquema en la base de datos
     ];
 
     // Generar un UUID
@@ -78,24 +79,25 @@ const postCreateHuesped = async (huesped = {}) => {
     // Agregar el UUID al objeto huésped
     huesped.uuid = newUuid;
 
-    // Convertir la imagen de base64 a binario (Buffer)
+    // Si la imagen ya viene en binario
     if (huesped.photo_base64) {
-        const base64Data = huesped.photo_base64.split(",")[1]; // Remover el prefijo
-        huesped.photo = Buffer.from(base64Data, "base64");
+        huesped.photo_base64 = huesped.photo_base64; 
     }
 
     const pickedHuesped = pick(huesped, fields);
+
     const query = `
-        INSERT INTO pre_register (uuid, identification_number, document_type, name, last_name, email, phone, origin, state, city, address, transport_origin, date_of_birth, reason_trip, is_first_time, photo_base64)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING *;
+        INSERT INTO pre_register (uuid, identification_number, document_type, name, last_name, email, phone, origin, state, city, address, transport_origin, date_of_birth, reason_trip, status, is_first_time, photo_base64)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) RETURNING *;
     `;
 
     // Ejecutar la consulta y retornar el resultado
-    const result = await handleHuespedQuery(query, Object.values(pickedHuesped)); // Usar función común
+    const result = await handleHuespedQuery(query, Object.values(pickedHuesped));
 
     // Retornar el `UUID` junto con el resultado de la operación
     return { ...result, uuid: newUuid };
 };
+
 
 
 
