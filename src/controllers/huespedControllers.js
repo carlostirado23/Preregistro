@@ -71,7 +71,7 @@ const postCreateHuesped = async (huesped = {}) => {
         "reason_trip",
         "status",
         "is_first_time",
-        "photo_base64", // Asegúrate de que este campo coincida con tu esquema en la base de datos
+        // "photo_base64", 
     ];
 
     // Generar un UUID
@@ -81,15 +81,15 @@ const postCreateHuesped = async (huesped = {}) => {
     huesped.uuid = newUuid;
 
     // Si la imagen ya viene en binario
-    if (huesped.photo_base64) {
-        huesped.photo_base64 = huesped.photo_base64; 
-    }
+    // if (huesped.photo_base64) {
+    //     huesped.photo_base64 = huesped.photo_base64; 
+    // }
 
     const pickedHuesped = pick(huesped, fields);
 
     const query = `
-        INSERT INTO pre_register (uuid, identification_number, document_type, name, last_name, email, phone, origin, state, city, address, transport_origin, date_of_birth, reason_trip, status, is_first_time, photo_base64)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) RETURNING *;
+        INSERT INTO pre_register (uuid, identification_number, document_type, name, last_name, email, phone, origin, state, city, address, transport_origin, date_of_birth, reason_trip, status, is_first_time)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING *;
     `;
 
     // Ejecutar la consulta y retornar el resultado
